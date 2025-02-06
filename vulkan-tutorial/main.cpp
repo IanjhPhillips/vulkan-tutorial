@@ -209,7 +209,7 @@ private:
 			frameBufferInfo.height = swapChainExtent.height;
 			frameBufferInfo.layers = 1;
 
-			if (vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &swapChainFramebuffers[1]) != VK_SUCCESS) {
+			if (vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
 				throw std::runtime_error("failed to create framebuffer!");
 			}
 		}
