@@ -60,7 +60,9 @@ void DestroyDebugUtilsMessengerEXT(
 class HelloTriangleApplication {
 public:
 
+	//const uint32_t WIDTH = 1920;
 	const uint32_t WIDTH = 800;
+	//const uint32_t HEIGHT = 1080;
 	const uint32_t HEIGHT = 600;
 
 	const char* APP_NAME = "Hello Triangle";
@@ -111,6 +113,9 @@ private:
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 
+	// DRAWING ===============================================
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+
 	void initWindow() {
 		std::cout << "Initializing window..." << std::endl;
 		glfwInit();
@@ -132,6 +137,7 @@ private:
 		createImageViews();
 		createRenderPass();
 		createGraphicsPipeline();
+		createFrameBuffers();
 	}
 
 	void mainLoop() {
@@ -183,6 +189,29 @@ private:
 
 		if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to create vulkan instance!");
+		}
+	}
+#pragma endregion
+
+#pragma region Drawing
+	void createFrameBuffers() {
+		swapChainFramebuffers.resize(swapChainImageViews.size());
+
+		for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+			VkImageView attachments[] = { swapChainImageViews[i] };
+
+			VkFramebufferCreateInfo frameBufferInfo{};
+			frameBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			frameBufferInfo.renderPass = renderPass;
+			frameBufferInfo.attachmentCount = 1;
+			frameBufferInfo.pAttachments = attachments;
+			frameBufferInfo.width = swapChainExtent.width;
+			frameBufferInfo.height = swapChainExtent.height;
+			frameBufferInfo.layers = 1;
+
+			if (vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &swapChainFramebuffers[1]) != VK_SUCCESS) {
+				throw std::runtime_error("failed to create framebuffer!");
+			}
 		}
 	}
 #pragma endregion
@@ -353,7 +382,6 @@ private:
 	}
 
 #pragma endregion
-
 
 #pragma region Presentation
 	void createSurface() {
@@ -529,7 +557,6 @@ private:
 		}
 	}
 #pragma endregion
-
 
 #pragma region Physical Device Selection
 	struct QueueFamilyIndices {
@@ -806,10 +833,13 @@ private:
 	}
 #pragma endregion
 
-
 #pragma region Cleanup
 	void cleanup() {
 		std::cout << "Cleanup..." << std::endl;
+
+		for (auto framebuffer : swapChainFramebuffers) {
+			vkDestroyFramebuffer(device, framebuffer, nullptr);
+		}
 
 		vkDestroyPipeline(device, graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
