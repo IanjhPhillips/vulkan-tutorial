@@ -201,7 +201,7 @@ private:
 			VkImageView attachments[] = { swapChainImageViews[i] };
 
 			VkFramebufferCreateInfo frameBufferInfo{};
-			frameBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			frameBufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 			frameBufferInfo.renderPass = renderPass;
 			frameBufferInfo.attachmentCount = 1;
 			frameBufferInfo.pAttachments = attachments;
