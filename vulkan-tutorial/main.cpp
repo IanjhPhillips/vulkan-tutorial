@@ -176,7 +176,6 @@ private:
 		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
 		appInfo.apiVersion = VK_API_VERSION_1_0;
 
-
 		VkInstanceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
@@ -703,6 +702,7 @@ private:
 		}
 	};
 
+
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkQueueFlagBits queueFlag = VK_QUEUE_GRAPHICS_BIT) {
 		QueueFamilyIndices indices;
 
@@ -745,10 +745,12 @@ private:
 
 		for (const auto& device : devices) {
 
+			// This can be removed
 			VkPhysicalDeviceProperties deviceProperties;
 			vkGetPhysicalDeviceProperties(device, &deviceProperties);
 			std::cout << "Found a physical device called " << deviceProperties.deviceName << std::endl;
 
+			// this cannot be removed
 			if (isDeviceSuitable(device)) {
 				physicalDevice = device;
 				std::cout << "Device selected!" << std::endl;
@@ -887,6 +889,7 @@ private:
 	}
 
 	/// <summary>
+	/// Populates a reference to createInfo with values needed for Debug Messenging
 	/// Modify debug messenger settings here
 	/// </summary>
 	/// <param name="createInfo"></param>
